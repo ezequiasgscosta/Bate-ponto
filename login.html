@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #111;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .login-container {
+    background-color: #222;
+    padding: 20px 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #0ff;
+    width: 300px;
+  }
+  input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: none;
+  }
+  button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #0ff;
+    color: #000;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+
+<div class="login-container">
+    <h1>Login</h1>
+    <div class="login-re">
+        <h2>RE</h2>
+        <input type="tel" pattern="[0-9]*" id="re" inputmode="numeric" placeholder="Digite seu RE">
+
+        <h2>Senha</h2>
+        <input type="password" id="senha" placeholder="Digite sua senha">
+    </div>
+    <div class="button-login">
+        <button id="entrar">Entrar</button>
+    </div>
+</div>
+
+<script>
+const entrar = document.getElementById("entrar");
+
+// Lista de usuários normais
+const listaUsuarios = [
+    { re: "12345", senha: "senha1" },
+    { re: "67890", senha: "senha2" },
+    { re: "11111", senha: "senha3" }
+];
+
+// Lista de administradores
+const listaAdmin = [
+    { re: "12345", senha: "senha2" },
+    { re: "67890", senha: "senha2" },
+    { re: "11111", senha: "senha3" }
+];
+
+entrar.addEventListener("click", () => {
+    const reInput = document.getElementById("re").value;
+    const senhaInput = document.getElementById("senha").value;
+
+    if(reInput === "" || senhaInput === "") {
+        alert("Preencha todos os campos!");
+        return;
+    }
+
+    // Verifica se é admin
+    const adminValido = listaAdmin.find(user => user.re === reInput && user.senha === senhaInput);
+    if(adminValido) {
+        alert("Bem-vindo, administrador!");
+        window.location.href = "painel-adm.html";
+        return;
+    }
+
+    // Verifica se é usuário normal
+    const usuarioValido = listaUsuarios.find(user => user.re === reInput && user.senha === senhaInput);
+    if(usuarioValido) {
+        alert("Bem-vindo!");
+        window.location.href = "painel-usuario.html";
+        return;
+    }
+
+    // Se não encontrou em nenhuma lista
+    alert("RE ou senha incorretos!");
+});
+</script>
+
+</body>
+</html>
