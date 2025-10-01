@@ -30,17 +30,28 @@ atualizarDataHora();
 
 //------------ ultimo ponto batido ---------------
 
-function atualiza_ultimo_ponto() {
-  const ultimo_ponto = document.getElementById("ultimo")
+function entrar() {
+  const ultimo_ponto = document.getElementById("ultimo");
   
   const hoje = new Date();
 
-    const dia = hoje.getDate().toString().padStart(2, "0");  
+  const dia = hoje.getDate().toString().padStart(2, "0");
   const mes = (hoje.getMonth() + 1).toString().padStart(2, "0");
   const ano = hoje.getFullYear();
   const horas = hoje.getHours().toString().padStart(2, "0");
   const minutos = hoje.getMinutes().toString().padStart(2, "0");
   const hora = `${horas}:${minutos}`;
 
-  ultimo_ponto.textContent = `Ultimo ponto batido: ${dia}/${mes}/${ano}  ${hora} `
+  const texto = `Último ponto batido: dia ${dia}/${mes}/${ano}  ${hora}`;
+  ultimo_ponto.textContent = texto;
+
+  localStorage.setItem("ultimoPonto", texto);
 }
+
+window.addEventListener("load", () => {
+  const ultimo_ponto = document.getElementById("ultimo");
+  const salvo = localStorage.getItem("ultimoPonto");
+  if (salvo) {
+    ultimo_ponto.textContent = salvo;
+  }
+});
