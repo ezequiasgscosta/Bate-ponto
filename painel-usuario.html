@@ -1,316 +1,50 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bater ponto</title>
-  <style>
-    body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      width: 100vw;
-      height: 100vh;
-      background-color: aqua;
-      padding: 0px;
-      box-sizing: border-box;
-    }
-    .camera, .entrarsair {
-      margin-bottom: 20px;
-    }
-    table {
-      margin-top: 20px;
-      border-collapse: collapse;
-    }
-    th, td {
-      padding: 0px 0px;
-      border: 1px solid black;
-    }
-    img {
-      max-width: 120px;
-    }
-
-    table {
-      width: 10px;
-      max-width: 200px;
-      border-collapse: collapse;
-      margin-top: 20px;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-      font-size:8px;
-      background: #fff;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-
-    th {
-        width: 10px;
-      background: #0077b6;
-      color: white;
-      text-transform: uppercase;
-      padding: 10px;
-    }
-
-    td {
-      padding: 8px;
-      text-align: center;
-      border-bottom: 1px solid #ddd;
-      font-size: 14px;
-    }
-
-    tr:nth-child(even) {
-      background: #f1f1f1;
-    }
-
-    tr:hover {
-      background: #d9f3ff;
-    }
-
-    #colFoto {
-      font-size: 12px;
-      margin: 0;
-    }
-
-    td img {
-      width: 100%;
-      max-width: 100px;
-      height: auto;
-      object-fit: cover;
-      display: block;
-      margin: 0 auto;
-    }
-
-    button {
-      padding: 10px 15px;
-      margin: 5px;
-      background-color: #0077b6;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-
-    button:hover {
-      background-color: #005b8a;
-    }
-
-    button:disabled {
-      background-color: #cccccc;
-      cursor: not-allowed;
-    }
-
-    .controls {
-      margin-top: 20px;
-    }
-  </style>
+  <link rel="stylesheet" href="painel-usuario.css">
 </head>
 <body>
-  <div class="camera">
-    <h2>Tirar Foto</h2>
-    <video id="video" width="300" autoplay></video><br>
-    <button id="tirarFoto">Capturar Foto</button>
-    <canvas id="canvas" width="300" style="display:none;"></canvas>
-  </div>
+  
+  <!---------somente hora e data aqui  -------------->
+  <header>
+    <div class="hd" id="hd">
+      <div class="data-header" id="data">
+      </div>
+      <div class="hora-header" id="hora">
+      </div>
+    </div>
+  </header>
 
-  <div class="entrarsair">
-    <button id="entrarsair" style="display:none;">Entrar em serviço</button>
-  </div>
+  <!----------------nome e foto aqui --------------->
 
-  <div class="controls">
-    <button id="limparDados">Limpar Todos os Registros</button>
-  </div>
+  <section class="nome-foto" id="nome-foto">
+    <div class="foto" id="foto">
+      <img src="imagens/perfil2.png" alt="">
+    </div>
+    
+    <div class="nome-pai" id="nome-pai">
+      <h1 class="nome" id="nome">Vitoria  souza</h1>
+    </div>
+  </section>
 
-  <table id="tabelaRegistros">
-    <thead>
-      <tr>
-        <th>Data</th>
-        <th>Entrada de Serviço</th>
-        <th>Almoço</th>
-        <th>Volta do Almoço</th>
-        <th>Fim do Expediente</th>
-        <th>Foto</th>
-      </tr>
-    </thead>
-    <tbody id="corpoTabela">
-      <!-- As linhas serão adicionadas dinamicamente via JavaScript -->
-    </tbody>
-  </table>
+<section class="ultimo-ponto">
+  <h1>Ultimo ponto batido: 27/09/2025 07:00</h1>
+</section>
 
-  <script>
-    const video = document.getElementById("video");
-    const canvas = document.getElementById("canvas");
-    const btnCapturar = document.getElementById("tirarFoto");
-    const entresair = document.getElementById("entrarsair");
-    const corpoTabela = document.getElementById("corpoTabela");
-    const btnLimpar = document.getElementById("limparDados");
+  <!--------------botoes aqui --------------------->
 
-    // Estados do botão
-    const etapas = [
-      { texto: "Entrar em serviço", coluna: "entrada" },
-      { texto: "Sair para o almoço", coluna: "almoco" },
-      { texto: "Voltar do almoço", coluna: "volta" },
-      { texto: "Sair do serviço", coluna: "fim" }
-    ];
+  <section class="botoes-pai" id="botoes-pai">
+    <button>Entrar</button>
+    <button>Conferir ponto</button>
+    <a href="index.html">
+      <p>Sair</p>
+    </a>
+  </section>
 
-    let etapaAtual = 0;
-    let fotoAtual = null;
-    let registros = [];
-    let registroAtual = null;
+  <script src="painel-usuario.js"></script>
 
-    // Carregar registros salvos ao iniciar
-    carregarRegistros();
-
-    // Solicita permissão e abre a câmera
-    navigator.mediaDevices.getUserMedia({ video: true })
-      .then(stream => {
-        video.srcObject = stream;
-      })
-      .catch(err => {
-        alert("Erro ao acessar a câmera: " + err);
-      });
-
-    // Captura foto
-    btnCapturar.addEventListener("click", () => {
-      const context = canvas.getContext("2d");
-      context.drawImage(video, 0, 0, canvas.width, canvas.height);
-      btnCapturar.style.display ="none"
-      video.style.display = "none"
-      
-      // Salva a foto em base64
-      fotoAtual = canvas.toDataURL("image/png");
-      
-      // mostra o botão de ponto
-      entresair.style.display = "block";
-      entresair.textContent = etapas[0].texto;
-      etapaAtual = 0;
-      
-      // Cria um novo registro
-      registroAtual = {
-        data: new Date().toLocaleDateString("pt-BR"),
-        entrada: "",
-        almoco: "",
-        volta: "",
-        fim: "",
-        foto: fotoAtual
-      };
-    });
-
-    entresair.addEventListener("click", () => {
-      const agora = new Date();
-      const hora = agora.toLocaleTimeString("pt-BR");
-
-      // Atualiza o registro atual
-      registroAtual[etapas[etapaAtual].coluna] = hora;
-
-      // Se for o primeiro registro do dia, adiciona à lista
-      if (etapaAtual === 0) {
-        registros.unshift(registroAtual);
-      }
-
-      // Avança para a próxima etapa
-      etapaAtual++;
-      
-      if (etapaAtual < etapas.length) {
-        entresair.textContent = etapas[etapaAtual].texto;
-      } else {
-        // Finalizou o expediente
-        entresair.disabled = true;
-        entresair.textContent = "Fim do expediente";
-        
-        // Salva os registros
-        salvarRegistros();
-        
-        // Atualiza a tabela
-        atualizarTabela();
-        
-        // Prepara para um novo registro
-        registroAtual = null;
-        fotoAtual = null;
-      }
-      
-      // Salva os registros a cada interação
-      salvarRegistros();
-      atualizarTabela();
-    });
-
-    // Botão para limpar todos os dados
-    btnLimpar.addEventListener("click", () => {
-      if (confirm("Tem certeza que deseja limpar todos os registros? Esta ação não pode ser desfeita.")) {
-        localStorage.removeItem("registrosPonto");
-        registros = [];
-        atualizarTabela();
-        alert("Todos os registros foram removidos.");
-      }
-    });
-
-    // Função para salvar registros no localStorage
-    function salvarRegistros() {
-      localStorage.setItem("registrosPonto", JSON.stringify(registros));
-    }
-
-    // Função para carregar registros do localStorage
-    function carregarRegistros() {
-      const registrosSalvos = localStorage.getItem("registrosPonto");
-      if (registrosSalvos) {
-        registros = JSON.parse(registrosSalvos);
-        atualizarTabela();
-      }
-    }
-
-    // Função para atualizar a tabela com os registros
-    function atualizarTabela() {
-      corpoTabela.innerHTML = "";
-      
-      registros.forEach(registro => {
-        const tr = document.createElement("tr");
-        
-        // Data
-        const tdData = document.createElement("td");
-        tdData.textContent = registro.data;
-        tr.appendChild(tdData);
-        
-        // Entrada
-        const tdEntrada = document.createElement("td");
-        tdEntrada.textContent = registro.entrada || "-";
-        tr.appendChild(tdEntrada);
-        
-        // Almoço
-        const tdAlmoco = document.createElement("td");
-        tdAlmoco.textContent = registro.almoco || "-";
-        tr.appendChild(tdAlmoco);
-        
-        // Volta
-        const tdVolta = document.createElement("td");
-        tdVolta.textContent = registro.volta || "-";
-        tr.appendChild(tdVolta);
-        
-        // Fim
-        const tdFim = document.createElement("td");
-        tdFim.textContent = registro.fim || "-";
-        tr.appendChild(tdFim);
-        
-        // Foto
-        const tdFoto = document.createElement("td");
-        if (registro.foto) {
-          const img = document.createElement("img");
-          img.src = registro.foto;
-          img.alt = "Foto do registro";
-          tdFoto.appendChild(img);
-        } else {
-          tdFoto.textContent = "-";
-        }
-        tr.appendChild(tdFoto);
-        
-        corpoTabela.appendChild(tr);
-      });
-    }
-
-    // Define o texto inicial do botão
-    entresair.textContent = etapas[0].texto;
-  </script>
 </body>
 </html>

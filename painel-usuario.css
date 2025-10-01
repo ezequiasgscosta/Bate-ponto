@@ -1,0 +1,110 @@
+
+body {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+header{
+    width: 100vw;
+    height: 250px;
+    border-bottom-left-radius: 40%;
+    border-bottom-right-radius: 40%;
+    background-color: #919191;
+    text-align: center;
+   
+} 
+
+/*<!---------somente hora e data aqui  -------------->*/
+.data-header {
+    padding-top: 20px;
+    font-size: 1em;
+    color: #000000;
+    font-family: 'Open Sans';
+
+}
+
+.hora-header {
+    font-size: 3em;
+    color: #000000;
+    font-family: 'Open Sans';
+}
+
+/*<!----------------nome e foto aqui --------------->*/
+
+.nome-foto {
+    position: relative;
+    top: -100px;
+    left: 10%;
+    width: 300px;
+    height: 200px;
+    
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+    border: 2px solid;
+}
+
+.foto {
+    position: relative;
+    top: -50px;
+    width: 100px;
+    text-align: center;
+    border-radius: 50%;
+    border: 2px solid;
+    overflow: hidden;
+}
+
+img {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    top: 2px;
+    object-fit: cover;
+}
+
+.nome-pai {
+    position: relative;
+    top: -25px;
+  width: 90%;         /* ocupa quase toda a largura */
+  margin: 0 auto;     /* centraliza */
+  text-align: center; /* centraliza o texto */
+  padding: 10px;
+}
+
+.nome {
+  white-space: nowrap;     /* impede a quebra de linha */
+  overflow: hidden;        /* esconde o que passar */
+  text-overflow: ellipsis; /* coloca "..." se passar do limite */
+  font-weight: bold;       /* deixa igual à imagem */
+}
+
+.ultimo-ponto {
+    position: relative;
+    top: -100px;
+    font-size: 10px;
+    text-align: center;
+}
+
+ /*<!--------------botoes aqui --------------------->*/
+
+ .botoes-pai {
+    display: flex;
+    align-items: center;
+    flex-flow: column nowrap;
+ }
+
+ button {
+    width: 250px;
+    height: 40px;
+    border-radius: 10px;
+    margin-top: 20px;
+    background-color: #919191;
+    font-size: 14px;
+ }
+
+ section a {
+    text-decoration: none;
+    color: #000000;
+ }
