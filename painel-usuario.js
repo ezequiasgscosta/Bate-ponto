@@ -42,5 +42,5 @@ function atualiza_ultimo_ponto() {
   const minutos = hoje.getMinutes().toString().padStart(2, "0");
   const hora = `${horas}:${minutos}`;
 
-  ultimo_ponto.textContent = `Ultimo ponto batido: dia ${dia}/${mes}/${ano}  ${hora} `
+  ultimo_ponto.textContent = `Ultimo ponto batido: ${dia}/${mes}/${ano}  ${hora} `
 }
