@@ -9,24 +9,95 @@ body {
 
 header {
     width: 100vw;
-    height: 150px;
+    height: 180px;
     background-color: #919191;
     border-bottom: 2px solid;
     text-align: center;
-
 }
 
 header h1 {
     padding-top: 15px;
-    margin-bottom: 45px;
+    margin-bottom: 30px;
     font-family:  'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
-.registro-hoje {
-
+header p {
+    font-size: 20px;
 }
 
-button img {
-    width: 20px;
-    margin-right: 10px;
-}
+/*-------------Registro aqui --------------------*/
+
+    .card {
+      width: 300px;
+      height: 150px;
+      background-color: #e8edec;
+      border: 2px solid #000;
+      border-radius: 6px;
+      margin-top: 30px;
+      padding: 0;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      font-weight: bold;
+      font-size: 20px;
+      border-bottom: 2px solid #000;
+      margin-bottom: 5px;
+      cursor: pointer;
+    }
+
+
+    .card-header .left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-body {
+        text-align: center;
+      padding: 16px;
+    }
+
+    .registro-box {
+      display: flex;
+      align-items: center;
+      background-color: #dee4e2;
+      padding: 12px;
+      border: 1px solid #aaa;
+      border-radius: 4px;
+      font-size: 14px;
+      gap: 10px;
+    }
+
+    .saldo-item {
+      display: flex;
+      justify-content: space-between;
+      margin: 6px 0;
+      font-size: 14px;
+    }
+
+    .icon {
+      font-size: 18px;
+      margin-right: 30px;
+    }
+
+    /*--------------------------Voltar aqui------------------*/
+
+    .voltar {
+        width:100%;
+        height: 40px;
+        border-radius: 12px;
+        text-align: center;
+        background-color: #53524E;
+        margin-top: 50px;
+        cursor: pointer;
+    }
+    a {
+      
+        background-color: #000;
+        text-decoration: none;
+        color: #a00909;
+    }
