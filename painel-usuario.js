@@ -29,12 +29,10 @@ atualizarDataHora();
 //-------------------Funçoes aqui ----------------
 
 //------------ ultimo ponto batido ---------------
-
 function entrar() {
   const ultimo_ponto = document.getElementById("ultimo");
-  
-  const hoje = new Date();
 
+  const hoje = new Date();
   const dia = hoje.getDate().toString().padStart(2, "0");
   const mes = (hoje.getMonth() + 1).toString().padStart(2, "0");
   const ano = hoje.getFullYear();
@@ -45,8 +43,17 @@ function entrar() {
   const texto = `Último ponto batido: dia ${dia}/${mes}/${ano}  ${hora}`;
   ultimo_ponto.textContent = texto;
 
+  // Salvar último ponto
   localStorage.setItem("ultimoPonto", texto);
+
+  // Salvar na lista de pontos
+  const ponto = `Dia ${dia}/${mes}/${ano} - ${hora}`;
+  let listaPontos = JSON.parse(localStorage.getItem("listaPontos")) || [];
+
+  listaPontos.push(ponto);
+  localStorage.setItem("listaPontos", JSON.stringify(listaPontos));
 }
+
 
 window.addEventListener("load", () => {
   const ultimo_ponto = document.getElementById("ultimo");
@@ -55,3 +62,45 @@ window.addEventListener("load", () => {
     ultimo_ponto.textContent = salvo;
   }
 });
+
+//---------------------------------------------------------
+
+  function carregarPontos() {
+    const listaPontos = JSON.parse(localStorage.getItem("listaPontos")) || [];
+    const hoje = new Date();
+    const dia = hoje.getDate().toString().padStart(2, "0");
+    const mes = (hoje.getMonth() + 1).toString().padStart(2, "0");
+    const ano = hoje.getFullYear();
+    const dataHoje = `Dia ${dia}/${mes}/${ano}`;
+
+    const registroHoje = document.getElementById("registro-hoje");
+    const listaContainer = document.getElementById("lista-pontos");
+
+    // Mostrar ponto de hoje
+    const pontoHoje = listaPontos.find(ponto => ponto.startsWith(dataHoje));
+    if (pontoHoje) {
+      registroHoje.innerHTML = `<span class="icon">🕒</span> <span>${pontoHoje}</span>`;
+    } else {
+      registroHoje.innerHTML = `<span class="icon">🕒</span> <span>Nenhum registro hoje</span>`;
+    }
+
+    // Mostrar todos os pontos (histórico)
+    listaContainer.innerHTML = "";
+    if (listaPontos.length === 0) {
+      listaContainer.innerHTML = "<li>Nenhum ponto registrado ainda.</li>";
+    } else {
+      listaPontos.forEach(ponto => {
+        const li = document.createElement("li");
+        li.textContent = ponto;
+        listaContainer.appendChild(li);
+      });
+    }
+  }
+
+  window.addEventListener("load", carregarPontos);
+
+  
+
+
+
+
