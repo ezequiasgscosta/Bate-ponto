@@ -101,3 +101,46 @@ header p {
         text-decoration: none;
         color: #a00909;
     }
+
+    .card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin: 10px 0;
+  background-color: #f1f1f1;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.card-body {
+  padding: 10px;
+}
+
+#listaPontosHoje li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+#listaPontosHoje li .icon {
+  margin-right: 5px;
+}
+
+#registroHojeBody {
+  max-height: 70px; /* altura suficiente para mostrar 3 registros */
+  overflow-y: auto;  /* ativa scroll vertical quando passar de 3 registros */
+  padding-right: 5px;
+}
+#listaPontosHoje li {
+  position: relative;
+  top: -50px;
+  margin: 0;
+  padding: 0px 0;
+  border-bottom: 1px solid #ddd; /* opcional, deixa mais visível cada registro */
+}
