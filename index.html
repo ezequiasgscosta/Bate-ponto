@@ -59,18 +59,20 @@
 <script>
 const entrar = document.getElementById("entrar");
 
-// Lista de usuários normais
+// Lista de usuários normais (com nome e foto)
 const listaUsuarios = [
-    { re: "12345", senha: "senha1" },
-    { re: "67890", senha: "senha2" },
-    { re: "11111", senha: "senha3" }
+    { re: "12345", senha: "senha1", nome: "Vitoria Souza", foto: "imagens/perfil2.png" },
+    { re: "67890", senha: "senha2", nome: "Carlos Silva", foto: "imagens/perfil3.png" },
+    { re: "11111", senha: "senha3", nome: "Ana Lima", foto: "imagens/perfil4.png" },
+    { re: "2222", senha: "senha3", nome: "jose alberto", foto: "imagens/perfil2.png" },
+    { re: "3333", senha: "senha3", nome: "jose antonio", foto: "imagens/perfil2.png" },
+    { re: "56178686838", senha: "050820", nome: "Vitoria casada", foto: "imagens/nos.png" }
+
 ];
 
-// Lista de administradores
+// Lista de administradores (com nome e foto)
 const listaAdmin = [
-    { re: "12345", senha: "senha2" },
-    { re: "67890", senha: "senha2" },
-    { re: "11111", senha: "senha3" }
+    { re: "99999", senha: "admin1", nome: "Administrador 1", foto: "imagens/admin1.png" }
 ];
 
 entrar.addEventListener("click", () => {
@@ -85,6 +87,8 @@ entrar.addEventListener("click", () => {
     // Verifica se é admin
     const adminValido = listaAdmin.find(user => user.re === reInput && user.senha === senhaInput);
     if(adminValido) {
+        // Salvar usuário logado no localStorage
+        localStorage.setItem("usuarioLogado", JSON.stringify(adminValido));
         alert("Bem-vindo, administrador!");
         window.location.href = "painel-adm.html";
         return;
@@ -93,12 +97,13 @@ entrar.addEventListener("click", () => {
     // Verifica se é usuário normal
     const usuarioValido = listaUsuarios.find(user => user.re === reInput && user.senha === senhaInput);
     if(usuarioValido) {
-        alert("Bem-vindo!");
+        // Salvar usuário logado no localStorage
+        localStorage.setItem("usuarioLogado", JSON.stringify(usuarioValido));
+        alert(`Bem-vindo, ${usuarioValido.nome}!`);
         window.location.href = "painel-usuario.html";
         return;
     }
 
-    // Se não encontrou em nenhuma lista
     alert("RE ou senha incorretos!");
 });
 </script>

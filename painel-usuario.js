@@ -1,11 +1,10 @@
-// Dias da semana e meses
+// ----------------- Dias e Meses -----------------
 const dias = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
 const meses = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
 
-// Atualizar data e hora
+// ----------------- Atualizar Data e Hora -----------------
 function atualizarDataHora() {
   const hoje = new Date();
-
   const diaSemana = dias[hoje.getDay()];
   const dia = hoje.getDate();
   const mes = meses[hoje.getMonth()];
@@ -14,21 +13,71 @@ function atualizarDataHora() {
   const horas = hoje.getHours().toString().padStart(2, "0");
   const minutos = hoje.getMinutes().toString().padStart(2, "0");
 
-  // Exibir data
   document.getElementById("data").textContent = `${diaSemana}, ${dia} de ${mes} de ${ano}`;
-  // Exibir hora (sem segundos)
   document.getElementById("hora").textContent = `${horas}:${minutos}`;
 }
 
-// Atualiza a cada minuto
 setInterval(atualizarDataHora, 1000);
 atualizarDataHora();
 
-// ------------------- Funções ------------------
+// ----------------- Usuário Logado -----------------
+const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+if (!usuarioLogado) {
+  alert("Nenhum usuário logado!");
+  window.location.href = "index.html";
+} else {
+  document.getElementById("nome").textContent = usuarioLogado.nome;
+  document.getElementById("foto").querySelector("img").src = usuarioLogado.foto;
+}
 
-// Função para registrar ponto
+// ----------------- Contador -----------------
+let botao = document.getElementById("entrar");
+let contadorDisplay = document.getElementById("contador-display");
+
+// Carregar contador salvo ou inicializar
+let contador = parseInt(localStorage.getItem(`contador_${usuarioLogado.re}`)) || 4;
+
+// Atualiza display do contador e bloqueio se necessário
+function atualizarBotao() {
+  const bloqueio = localStorage.getItem(`bloqueioEntrar_${usuarioLogado.re}`);
+  if (bloqueio) {
+    const bloqueioTime = new Date(bloqueio).getTime();
+    const agora = new Date().getTime();
+    const diffHoras = (agora - bloqueioTime) / (1000 * 60 * 60);
+
+    if (diffHoras < 11) {
+      botao.disabled = true;
+      botao.style.opacity = "0.6";
+      botao.style.cursor = "not-allowed";
+      contadorDisplay.textContent = `Fim do expediente! Volte em ${Math.ceil(11 - diffHoras)} horas `;
+      return;
+    } else {
+      // Remove bloqueio após 11h
+      localStorage.removeItem(`bloqueioEntrar_${usuarioLogado.re}`);
+      contador = 4; // Reset contador
+      localStorage.setItem(`contador_${usuarioLogado.re}`, contador);
+    }
+  }
+
+  // Se contador chegou a 0, bloqueia
+  if (contador === 0) {
+    botao.disabled = true;
+    botao.style.opacity = "0.6";
+    botao.style.cursor = "not-allowed";
+    contadorDisplay.textContent = "Contagem finalizada!";
+  } else {
+    botao.disabled = false;
+    botao.style.opacity = "1";
+    botao.style.cursor = "pointer";
+    contadorDisplay.textContent = `Restam ${contador} cliques`;
+  }
+}
+
+atualizarBotao();
+
+// ----------------- Função Entrar -----------------
 function entrar() {
-  const ultimo_ponto = document.getElementById("ultimo");
+  if (contador === 0) return; // Proteção extra
 
   const hoje = new Date();
   const dia = hoje.getDate().toString().padStart(2, "0");
@@ -38,62 +87,35 @@ function entrar() {
   const minutos = hoje.getMinutes().toString().padStart(2, "0");
   const hora = `${horas}:${minutos}`;
 
-  const texto = `Último ponto batido: dia ${dia}/${mes}/${ano}  ${hora}`;
-  ultimo_ponto.textContent = texto;
+  const texto = `Último ponto batido: dia ${dia}/${mes}/${ano} ${hora}`;
+  document.getElementById("ultimo").textContent = texto;
 
-  // Salvar último ponto
-  localStorage.setItem("ultimoPonto", texto);
+  // ----------------- Contador -----------------
+  contador--;
+  localStorage.setItem(`contador_${usuarioLogado.re}`, contador);
+  atualizarBotao();
 
-  // Salvar na lista de pontos
+  // Se zerou, salva bloqueio de 11h
+  if (contador === 0) {
+    localStorage.setItem(`bloqueioEntrar_${usuarioLogado.re}`, new Date().toISOString());
+  }
+
+  // ----------------- Salvar pontos -----------------
   const ponto = `Dia ${dia}/${mes}/${ano} - ${hora}`;
-  let listaPontos = JSON.parse(localStorage.getItem("listaPontos")) || [];
+  let listaPontos = JSON.parse(localStorage.getItem(`listaPontos_${usuarioLogado.re}`)) || [];
   listaPontos.push(ponto);
-  localStorage.setItem("listaPontos", JSON.stringify(listaPontos));
+  localStorage.setItem(`listaPontos_${usuarioLogado.re}`, JSON.stringify(listaPontos));
 
-  // ✅ Salvar mensagem para a página de conferência
-  localStorage.setItem("mensagemPainel", texto);
+  // Salva último ponto para conferência
+  localStorage.setItem(`ultimoPonto_${usuarioLogado.re}`, texto);
 }
 
-// Carregar último ponto ao abrir a página
+// ----------------- Evento do botão -----------------
+botao.addEventListener("click", entrar);
+
+// ----------------- Carregar Último Ponto -----------------
 window.addEventListener("load", () => {
   const ultimo_ponto = document.getElementById("ultimo");
-  const salvo = localStorage.getItem("ultimoPonto");
-  if (salvo) {
-    ultimo_ponto.textContent = salvo;
-  }
-
-  carregarPontos();
+  const salvo = localStorage.getItem(`ultimoPonto_${usuarioLogado.re}`);
+  if (salvo) ultimo_ponto.textContent = salvo;
 });
-
-// Função para carregar histórico de pontos
-function carregarPontos() {
-  const listaPontos = JSON.parse(localStorage.getItem("listaPontos")) || [];
-  const hoje = new Date();
-  const dia = hoje.getDate().toString().padStart(2, "0");
-  const mes = (hoje.getMonth() + 1).toString().padStart(2, "0");
-  const ano = hoje.getFullYear();
-  const dataHoje = `Dia ${dia}/${mes}/${ano}`;
-
-  const registroHoje = document.getElementById("registro-hoje");
-  const listaContainer = document.getElementById("lista-pontos");
-
-  // Mostrar ponto de hoje
-  const pontoHoje = listaPontos.find(ponto => ponto.startsWith(dataHoje));
-  if (pontoHoje) {
-    registroHoje.innerHTML = `<span class="icon">🕒</span> <span>${pontoHoje}</span>`;
-  } else {
-    registroHoje.innerHTML = `<span class="icon">🕒</span> <span>Nenhum registro hoje</span>`;
-  }
-
-  // Mostrar todos os pontos (histórico)
-  listaContainer.innerHTML = "";
-  if (listaPontos.length === 0) {
-    listaContainer.innerHTML = "<li>Nenhum ponto registrado ainda.</li>";
-  } else {
-    listaPontos.forEach(ponto => {
-      const li = document.createElement("li");
-      li.textContent = ponto;
-      listaContainer.appendChild(li);
-    });
-  }
-}
